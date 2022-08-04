@@ -42,7 +42,7 @@ const TodoList = (props: ITodoList) => {
     setData(prev => 
       [...prev].map((item) => {
         if (item.id !== id) return item;
-        return {...item, title, content };
+        return {...item, title, content, updatedAt: new Date().toISOString() };
       })
     )
   }
