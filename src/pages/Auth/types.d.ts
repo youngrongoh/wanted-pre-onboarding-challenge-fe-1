@@ -5,4 +5,8 @@ declare namespace Auth {
   namespace SignIn {
     type Fields = import('./meta').SIGNIN_FILEDS;
   }
+
+  namespace SignUp {
+    type Fields = import('./meta').SIGNUP_FILEDS;
+  }
 }

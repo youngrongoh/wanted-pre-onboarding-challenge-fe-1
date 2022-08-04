@@ -36,7 +36,6 @@ const SignIn = ({ goToSignUp }: ISignIn) => {
 
   useEffect(() => {
     trigger();
-    console.log('asdf')
   }, [trigger]);
 
   return (
