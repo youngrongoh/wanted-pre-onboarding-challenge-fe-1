@@ -12,7 +12,7 @@ Copyright© youngrongoh
 
 ## 과제 진행도
 
-[ ◼︎◼︎◼︎◼︎◼︎◼︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎ ] 20%
+[ ◼︎◼︎◼︎◼︎◼︎◼︎◼︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎◻︎ ] 35%
 
 ### Assignment 1 - Login / SignUp
 [x] /auth 경로에 로그인 / 회원가입 기능을 개발
@@ -27,7 +27,7 @@ Copyright© youngrongoh
   - 어떤 경우든 토큰이 유효하지 않다면 사용자에게 알리고 로그인 페이지로 리다이렉트 시켜주세요
 
 ### Assignment 2 - Todo List
-[ ] Todo List API를 호출하여 Todo List CRUD 기능 구현
+[x] Todo List API를 호출하여 Todo List CRUD 기능 구현
  - 목록 / 상세 영역으로 나누어 구현해주세요
  - Todo 목록을 볼 수 있음
  - Todo 추가 버튼을 클릭하면 할 일이 추가
