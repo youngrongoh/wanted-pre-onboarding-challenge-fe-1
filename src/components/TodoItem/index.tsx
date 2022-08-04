@@ -38,12 +38,18 @@ const TodoItem = ({ id, title, content, createdAt, updatedAt, remove, update }: 
     remove(id);
   };
 
+  const onCancelClicked = () => {
+    setTodo(prev => ({ ...prev, title, content }))
+    setMode('normal');
+  }
+
   return (
     <div>
       <Toggle open={showsDetail} onClick={toggleDetail} />
       <div>
         <EditableText mode={mode} onChange={onChange('title')}>{todo.title}</EditableText>
-        <button onClick={onRemoveClicked}>🗑</button>
+        {mode === 'normal' && <button onClick={onRemoveClicked}>🗑</button>}
+        {mode === 'edit' && <button onClick={onCancelClicked}>❌</button>}
         <button onClick={onEditClicked}>✏️</button>
       </div>
       {showsDetail && (
