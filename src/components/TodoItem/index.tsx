@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom';
 import EditableText from '../EditableText';
 import Toggle from '../Toggle';
 
@@ -13,12 +14,19 @@ interface ITodoItem {
 }
 
 const TodoItem = ({ id, title, content, createdAt, updatedAt, remove, update }: ITodoItem) => {
+  const { todoId } = useParams();
+  const navigate = useNavigate();
+  
   const [mode, setMode] = useState<React.ComponentProps<typeof EditableText>['mode']>('normal');
   const [todo, setTodo] = useState({ title, content });
-  const [showsDetail, setShowsDetail] = useState<boolean>(false);
+  const showsDetail = useMemo(() => todoId === id, [id, todoId]);
 
   const toggleDetail = () => {
-    setShowsDetail(prev => !prev);
+    let to = `/todo/${id}`;
+    if (showsDetail) {
+      to = '/'
+    }
+    navigate(to);
   }
 
   const onChange = (field: 'title' | 'content') => (value: string) => {

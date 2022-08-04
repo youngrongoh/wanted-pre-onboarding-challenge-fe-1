@@ -9,6 +9,9 @@ function Router() {
       <Routes>
         <Route path="/">
           <Route index element={<Main />} />
+          <Route path="todo">
+            <Route path=":todoId" element={<Main />} />
+          </Route>
           <Route path="/auth" element={<Auth />} />
         </Route>
       </Routes>
