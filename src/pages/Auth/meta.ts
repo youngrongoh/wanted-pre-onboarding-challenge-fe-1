@@ -1,6 +1,6 @@
 export const AUTH_STEPS = {
   SIGNIN: 'signin',
-  SIGNUP: 'sginup'
+  SIGNUP: 'signup'
 } as const
 
 export const SIGNIN_FILEDS = {
