@@ -1,15 +1,19 @@
+import React from 'react'
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
-import React from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import signUpValidation from '../../validation/signup';
 import { SIGNUP_FILEDS } from './meta';
+import { useAuth } from '../../context/auth';
+import useAlert from '../../context/alert';
 
 interface ISignUp {
   goToSignIn: () => void;
 }
 
 const SignUp = ({ goToSignIn }: ISignUp) => {
+  const auth = useAuth();
+  const alert = useAlert();
 
   const { control, handleSubmit, formState } = useForm<Auth.SignUp.Fields>({
     mode: 'onChange',
@@ -20,8 +24,13 @@ const SignUp = ({ goToSignIn }: ISignUp) => {
     }
   });
 
-  const submit = (data: Auth.SignUp.Fields) => {
-    // console.log(data);
+  const submit = async (data: Auth.SignUp.Fields) => {
+    const result = await auth.signUp(data);
+    if (result.isFail()) {
+      alert.error({ message: result.message || '' });
+      return;
+    }
+    alert.log({ message: result.message || '' });
     goToSignIn();
   }
 

@@ -1,17 +1,21 @@
 import React, { useEffect, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup'
+import { ErrorMessage } from '@hookform/error-message';
 import signInValidation from '../../validation/signIn';
 import { SIGNIN_FILEDS } from './meta';
-import { ErrorMessage } from '@hookform/error-message';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/auth';
+import useAlert from '../../context/alert';
 
 interface ISignIn {
   goToSignUp: () => void;
 }
-
 const SignIn = ({ goToSignUp }: ISignIn) => {
   const navigate = useNavigate();
+  const auth = useAuth();
+  const alert = useAlert();
+
   const { control, handleSubmit, formState, trigger } = useForm<Auth.SignIn.Fields>({
     mode: 'onChange',
     resolver: yupResolver(signInValidation),
@@ -21,8 +25,13 @@ const SignIn = ({ goToSignUp }: ISignIn) => {
     }
   });
 
-  const submit = (data: Auth.SignIn.Fields) => {
-    navigate('/');
+  const submit = async (data: Auth.SignIn.Fields) => {
+    const result = await auth.signIn(data);
+    if (result.isFail()) {
+      alert.error({ message: result.message || '' });
+      return;
+    }
+    alert.log({ message: result.message || '', onOk: () => navigate('/') });
   }
 
   const { errorField, hasErrors } = useMemo(() => {
