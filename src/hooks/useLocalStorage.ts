@@ -2,13 +2,15 @@ import { useEffect, useState } from 'react';
 
 const PREFIX = 'wtd-obd_';
 
-const useLocalStorage = (key?: string | string[]) => {
-  const [storage, setStorage] = useState<{ [K in string]: any } | null>(null);
+
+// Q: KS에 number, symbol이 포함되나?
+const useLocalStorage = <KS extends string | string[], T = { [K in KS extends string ? KS : KS[number]]: unknown }>(key?: KS) => {
+  const [storage, setStorage] = useState<T | null>(null);
 
   useEffect(() => {
-    const initialStorage = Object.entries(localStorage)
-    .filter(([savedKey]) => savedKey.indexOf(PREFIX) === 0)
-    .filter(([savedKey]) => {
+    let initialStorage = Object.entries(localStorage)
+      .filter(([savedKey]) => savedKey.indexOf(PREFIX) === 0)
+      .filter(([savedKey]) => {
         const originalKey = savedKey.replace(PREFIX, '');
         if (Array.isArray(key)) {
           return key.includes(originalKey);
@@ -19,30 +21,32 @@ const useLocalStorage = (key?: string | string[]) => {
         }
       })
       .reduce((acc, [savedKey, value]) => {
-        const originalKey = savedKey.replace(PREFIX, '');
+        const originalKey = savedKey.replace(PREFIX, '') as keyof T;
         acc[originalKey] = JSON.parse(value);
         return acc;
-      }, {} as Exclude<typeof storage, null>);
+      }, {} as T);
     setStorage(initialStorage);
   }, []);
 
-  const getValue = (key: string) => {
+  const getValue = (key: keyof T) => {
     if (storage == null) return;
     return storage[key];
   }
 
-  const setValue = (key: string, value: unknown) => {
-    const jsonValue = localStorage.setItem(PREFIX + key, JSON.stringify(value));
+  const setValue = (key: keyof T, value: T[keyof T]) => {
+    localStorage.setItem(PREFIX + (key as string), JSON.stringify(value));
     setStorage(storage => {
-      const copied = {...storage};
-      copied[key] = jsonValue;
+      if (storage == null) return storage;
+      const copied = { ...storage };
+      copied[key] = value;
       return copied;
     })
   }
 
-  const removeValue = (key: string) => {
-    localStorage.removeItem(PREFIX + key);
+  const removeValue = (key: keyof T) => {
+    localStorage.removeItem(PREFIX + (key as string));
     setStorage(storage => {
+      if (storage == null) return storage;
       const copied = { ...storage };
       delete copied[key];
       return copied;
