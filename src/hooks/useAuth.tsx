@@ -1,7 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import useLocalStorage from './useLocalStorage';
+import { useEffect, useMemo } from 'react';
 import { signIn, signUp } from '../api/auth';
 import { ReturnData } from '../const/return';
+import { useStorage } from '../context/storage';
 
 interface UseAuthData {
   auth: {
@@ -14,7 +15,7 @@ interface UseAuthData {
 const defaultValue = { isSignedIn: false };
 
 export const useAuth = () => {
-  const storage = useLocalStorage<['auth', 'token'], UseAuthData>(['auth', 'token']);
+  const storage = useStorage<['auth', 'token'], UseAuthData>(['auth', 'token']);
 
   const { mutateAsync: requestSignIn } = useMutation(['signIn'], (params: Parameters<typeof signIn>[0]) => signIn(params));
   const { mutateAsync: requestSignUp } = useMutation(['signUp'], (params: Parameters<typeof signUp>[0]) => signUp(params));
@@ -55,8 +56,12 @@ export const useAuth = () => {
     storage.set('token', token);
   }
 
+  const _data = useMemo(() => {
+    return storage.data?.auth || defaultValue;
+  }, [storage]);
+
   return {
-    data: storage.data?.auth || defaultValue,
+    data: _data,
     signIn: _signIn,
     signUp: _signUp,
     signOut

@@ -1,18 +1,29 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { useAuth } from './hooks/useAuth';
 import Auth from './pages/Auth';
 import Main from './pages/Main';
 
-function Router() {
+const Router = () => {
+  const { data: { isSignedIn } } = useAuth();
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/">
-          <Route index element={<Main />} />
+          <Route index element={(
+            <ProtectedRoute when={!isSignedIn} to="auth">
+              <Main />
+            </ProtectedRoute>
+          )} />
           <Route path="todo">
             <Route path=":todoId" element={<Main />} />
           </Route>
-          <Route path="/auth" element={<Auth />} />
+          <Route path="auth" element={
+            <ProtectedRoute when={isSignedIn} to="/">
+              <Auth />
+            </ProtectedRoute>
+          } />
         </Route>
       </Routes>
     </BrowserRouter>
@@ -20,3 +31,12 @@ function Router() {
 }
 
 export default Router;
+
+type IProtectedRoute = { 
+  when: boolean; 
+  children: React.ReactElement;
+} & React.ComponentProps<typeof Navigate>
+
+const ProtectedRoute = ({ when, children, ...props }: IProtectedRoute) => {
+  return (when ? <Navigate {...props} /> : children);
+}
