@@ -40,7 +40,16 @@ const useLocalStorage = (key?: string | string[]) => {
     })
   }
 
-    return {
+  const removeValue = (key: string) => {
+    localStorage.removeItem(PREFIX + key);
+    setStorage(storage => {
+      const copied = { ...storage };
+      delete copied[key];
+      return copied;
+    })
+  }
+
+  return {
     data: storage,
     get: getValue,
     set: setValue,
