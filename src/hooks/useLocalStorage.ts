@@ -18,13 +18,13 @@ const useLocalStorage = (key?: string | string[]) => {
           return true;
         }
       })
-      .reduce((acc, [key, value]) => {
-        acc[key] = JSON.parse(value);
+      .reduce((acc, [savedKey, value]) => {
+        const originalKey = savedKey.replace(PREFIX, '');
+        acc[originalKey] = JSON.parse(value);
         return acc;
       }, {} as Exclude<typeof storage, null>);
-
     setStorage(initialStorage);
-  }, [key]);
+  }, []);
 
   const getValue = (key: string) => {
     if (storage == null) return;
@@ -40,10 +40,11 @@ const useLocalStorage = (key?: string | string[]) => {
     })
   }
 
-  return {
+    return {
     data: storage,
     get: getValue,
     set: setValue,
+    remove: removeValue,
   }
 }
 
