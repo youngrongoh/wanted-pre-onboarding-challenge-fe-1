@@ -12,7 +12,7 @@ interface HttpSignIn {
 }
 
 export const signIn = async (params: HttpSignIn['Request']): Promise<HttpSignIn['Response']> => {
-  const res = await http.get('/users/login', { params });
+  const res = await http.post('/users/login', params);
   return res.data;
 }
 
