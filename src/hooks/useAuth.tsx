@@ -1,44 +1,21 @@
-import { createContext, useContext, useMemo } from 'react'
 import { useMutation } from '@tanstack/react-query';
-import useLocalStorage from '../hooks/useLocalStorage';
+import useLocalStorage from './useLocalStorage';
 import { signIn, signUp } from '../api/auth';
 import { ReturnData } from '../const/return';
 
-type AuthContextType = {
-  email?: string;
-  isSignedIn: boolean;
-};
+interface UseAuthData {
+  auth: {
+    email?: string;
+    isSignedIn: boolean;
+  };
+  token: string;
+}
 
 const defaultValue = { isSignedIn: false };
 
-const AuthContext = createContext<AuthContextType>(defaultValue);
-
-interface IAuthContextProvider {
-  children: React.ReactElement;
-}
-
-export const AuthContextProvider = ({ children }: IAuthContextProvider) => {
-  const { data } = useLocalStorage('auth');
-  
-  const auth = useMemo(() => {
-    if (data && 'email' in data) {
-      return { ...data, isSignedIn: true };
-    } else {
-      return defaultValue;
-    }
-  }, [data]);
-
-  return (
-    <AuthContext.Provider value={auth}>
-      {children}
-    </AuthContext.Provider>
-  )
-};
-
 export const useAuth = () => {
-  const auth = useContext(AuthContext);
-  const storage = useLocalStorage(['auth', 'token']);
-  
+  const storage = useLocalStorage<['auth', 'token'], UseAuthData>(['auth', 'token']);
+
   const { mutateAsync: requestSignIn } = useMutation(['signIn'], (params: Parameters<typeof signIn>[0]) => signIn(params));
   const { mutateAsync: requestSignUp } = useMutation(['signUp'], (params: Parameters<typeof signUp>[0]) => signUp(params));
 
@@ -79,7 +56,7 @@ export const useAuth = () => {
   }
 
   return {
-    data: auth,
+    data: storage.data?.auth || defaultValue,
     signIn: _signIn,
     signUp: _signUp,
     signOut

@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import signUpValidation from '../../validation/signup';
 import { SIGNUP_FILEDS } from './meta';
-import { useAuth } from '../../context/auth';
+import { useAuth } from '../../hooks/useAuth';
 import useAlert from '../../context/alert';
 
 interface ISignUp {

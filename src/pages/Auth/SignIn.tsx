@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { ErrorMessage } from '@hookform/error-message';
 import signInValidation from '../../validation/signIn';
 import { SIGNIN_FILEDS } from './meta';
-import { useAuth } from '../../context/auth';
+import { useAuth } from '../../hooks/useAuth';
 import useAlert from '../../context/alert';
 
 interface ISignIn {
