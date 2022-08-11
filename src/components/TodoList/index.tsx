@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Todo } from '../../api/todo';
 import useTodo from '../../hooks/useTodo';
 import TodoItem from '../TodoItem';
 
@@ -8,26 +9,14 @@ interface ITodoList {
 
 const TodoList = (props: ITodoList) => {
   const todo = useTodo();
-  const dummy = [
-    {
-      title: "hi",
-      content: "hello",
-      id: "z3FGrcRL55qDCFnP4KRtn",
-      createdAt: "2022-07-24T14:15:55.537Z",
-      updatedAt: "2022-07-24T14:15:55.537Z"
-    },
-    {
-      title: "hello",
-      content: "world",
-      id: "a2FsAa2DFd54f1nf1GR1g",
-      createdAt: "2022-07-24T14:15:55.537Z",
-      updatedAt: "2022-07-24T14:15:55.537Z"
-    }
-  ];
-  const [data, setData] = useState(dummy);
+  const [data, setData] = useState(todo.data);
+
+  useEffect(() => {
+    setData(todo.data);
+  }, [todo])
 
   const onAddClicked = () => {
-    const newTodo = {
+    const newTodo: Todo = {
       title: '할 일을 입력하세요.', 
       content: '', 
       id: Date.now().toString(32), 
@@ -36,7 +25,6 @@ const TodoList = (props: ITodoList) => {
     }
 
     todo.add(newTodo);
-    setData(prev => [...prev, newTodo]);
   }
 
   const update = (id: string, data: { title: string, content: string }) => {
