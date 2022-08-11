@@ -42,3 +42,13 @@ export const updateTodo = async ({ todoId, todo }: { todoId: Todo['id'], todo: H
   const res = await http.put(`/todos/${todoId}`, todo);
   return res.data?.data;
 }
+
+interface HttpDeleteTodo {
+  Response: null;
+}
+
+export const deleteTodo = async (todoId: Todo['id']): Promise<HttpDeleteTodo['Response']> => {
+  const res = await http.delete(`/todos/${todoId}`);
+  return res.data?.data;
+}
+

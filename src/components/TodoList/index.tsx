@@ -9,11 +9,6 @@ interface ITodoList {
 
 const TodoList = (props: ITodoList) => {
   const todo = useTodo();
-  const [data, setData] = useState(todo.data);
-
-  useEffect(() => {
-    setData(todo.data);
-  }, [todo])
 
   const onAddClicked = () => {
     const newTodo: Todo = {
@@ -28,21 +23,17 @@ const TodoList = (props: ITodoList) => {
   }
 
   const update = (id: string, data: { title: string, content: string }) => {
-    todo.update(id, data);
+    todo.edit(id, data);
   }
 
-  const remove = (id: string) => {
-    setData(prev => 
-      [...prev].filter((item) => item.id !== id)
-    );
-  }
+  const remove = (id: string) => todo.remove(id);
 
   return (
     <div>
       <header>Todos</header>
       <section>
         <ul>
-        {data.map((item) => (
+        {todo.data.map((item) => (
           <li key={item.id}>
             <TodoItem {...item} update={update} remove={remove} />
           </li>
