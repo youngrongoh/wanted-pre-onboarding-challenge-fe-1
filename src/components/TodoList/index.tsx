@@ -28,13 +28,7 @@ const TodoList = (props: ITodoList) => {
   }
 
   const update = (id: string, data: { title: string, content: string }) => {
-    const { title, content } = data;
-    setData(prev => 
-      [...prev].map((item) => {
-        if (item.id !== id) return item;
-        return {...item, title, content, updatedAt: new Date().toISOString() };
-      })
-    )
+    todo.update(id, data);
   }
 
   const remove = (id: string) => {
