@@ -1,4 +1,4 @@
-import http from './http';
+import http, { attachTokenOnReqestHeader } from './http';
 
 interface HttpSignIn {
   Request: {
@@ -13,6 +13,11 @@ interface HttpSignIn {
 
 export const signIn = async (params: HttpSignIn['Request']): Promise<HttpSignIn['Response']> => {
   const res = await http.post('/users/login', params);
+
+  if (res.status === 200) {
+    attachTokenOnReqestHeader(res.data.token);
+  }
+
   return res.data;
 }
 
