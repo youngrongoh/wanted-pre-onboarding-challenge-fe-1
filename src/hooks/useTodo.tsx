@@ -3,14 +3,16 @@ import { createTodo, deleteTodo, getTodos, updateTodo } from '../api/todo';
 
 const useTodo = () => {
   const { data: todos, refetch: reftchGetTodos } = useQuery(['get', 'todos'], () => getTodos());
+  const syncTodoList = () => reftchGetTodos();
+
   const { mutateAsync: requestCreateTodo } = useMutation(['create', 'todo'], (todo: Parameters<typeof createTodo>[0]) => createTodo(todo), {
-    onSuccess: () => reftchGetTodos()
+    onSuccess: syncTodoList
   });
   const { mutateAsync: requestUpdateTodo } = useMutation(['update', 'todo'], (param: Parameters<typeof updateTodo>[0]) => updateTodo(param), {
-    onSuccess: () => reftchGetTodos()
+    onSuccess: syncTodoList
   });
   const { mutateAsync: requestDeleteTodo } = useMutation(['delete', 'todo'], (todoId: Parameters<typeof deleteTodo>[0]) => deleteTodo(todoId), {
-    onSuccess: () => reftchGetTodos()
+    onSuccess: syncTodoList
   });
 
   const add = async (todo: Parameters<typeof createTodo>[0]) => {
