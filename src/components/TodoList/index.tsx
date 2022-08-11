@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import useTodo from '../../hooks/useTodo';
 import TodoItem from '../TodoItem';
 
 interface ITodoList {
@@ -6,6 +7,7 @@ interface ITodoList {
 }
 
 const TodoList = (props: ITodoList) => {
+  const todo = useTodo();
   const dummy = [
     {
       title: "hi",
@@ -25,16 +27,16 @@ const TodoList = (props: ITodoList) => {
   const [data, setData] = useState(dummy);
 
   const onAddClicked = () => {
-    setData(prev => [
-      ...prev, 
-      {
-        title: '할 일을 입력하세요.', 
-        content: '', 
-        id: Date.now().toString(32), 
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    ]);
+    const newTodo = {
+      title: '할 일을 입력하세요.', 
+      content: '', 
+      id: Date.now().toString(32), 
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
+
+    todo.add(newTodo);
+    setData(prev => [...prev, newTodo]);
   }
 
   const update = (id: string, data: { title: string, content: string }) => {
